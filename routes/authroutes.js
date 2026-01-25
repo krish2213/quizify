@@ -386,7 +386,7 @@ router.post("/chat", isLoggedIn, async (req, res) => {
 });
 
 //Challenge 1v1
-async function generateQuiz(topic, count) {
+/*async function generateQuiz(topic, count) {
     try {
         const response = await axios.post(`${process.env.SEND_REQUEST_CHALLENGE}`,
             {
@@ -416,6 +416,37 @@ async function generateQuiz(topic, count) {
         }));
     } catch (error) {
         console.error("Error generating quiz with Gemini:", error.message);
+        return "error";
+    }
+}*/
+const groq1 = new Groq({ apiKey: process.env.GROQ_API_KEY_1v1 });
+async function generateQuiz(topic, count) {
+    try {
+        const response = await groq1.chat.completions.create({
+            model: process.env.MODEL1,
+            messages: [
+                {
+                    role: "system",
+                    content: process.env.SYSTEMPROMPT
+                },
+                {
+                    role: "user",
+                    content: `Generate exactly ${count} multiple-choice quiz questions on the topic: ${topic}. Mix difficulty levels (easy, medium, hard) but DO NOT generate more or fewer than ${count} questions.`
+                }
+            ]
+        });
+        const content = response.choices?.[0]?.message?.content?.trim() || "";
+        const jsonString = content.slice(content.indexOf("["), content.lastIndexOf("]") + 1);
+        const questions = JSON.parse(jsonString).slice(0,count);
+
+        return questions.map((q, index) => ({
+            id: index + 1,
+            question: q.question,
+            options: q.options,
+            correctoption: q.correctoption
+        }));
+    } catch (error) {
+        console.error("Error generating quiz with Groq:", error.message);
         return "error";
     }
 }

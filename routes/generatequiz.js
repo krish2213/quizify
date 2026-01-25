@@ -4,7 +4,7 @@ const axios = require("axios");
 const UserQuiz = require("../models/userquiz");
 const { isLoggedIn } = require("../middleware");
 const Groq = require("groq-sdk").default;
-/*
+
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY_QUIZ });
 async function generateQuiz(topic, count) {
     try {
@@ -36,7 +36,7 @@ async function generateQuiz(topic, count) {
         return "error";
     }
 }
-*/
+/*
 async function generateQuiz(topic, count) {
     try {
         const response = await axios.post(`${process.env.SEND_REQUEST}`,
@@ -70,7 +70,7 @@ async function generateQuiz(topic, count) {
         return "error";
     }
 }
-
+*/
 router.post("/", isLoggedIn, async (req, res) => {
     const quiztopic = req.session.quiztopic;
     const qcount = req.session.qcount;
