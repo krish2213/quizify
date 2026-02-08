@@ -1,0 +1,86 @@
+.attend-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.attend-form {
+    background: var(--surface);
+    padding: 30px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.attend-form h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--primary);
+    text-align: center;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: left;
+}
+
+.attend-input {
+    padding: 12px;
+    border: 1px solid var(--dark);
+    border-radius: 5px;
+    background: var(--darker);
+    color: var(--white);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.attend-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 5px var(--primary-trans);
+}
+
+.attend-btn {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: var(--primary);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.attend-btn:hover {
+    background: var(--primary-trans);
+}
+
+
+@media (max-width: 480px) {
+    .attend-wrapper {
+        min-height: 70vh;
+        padding: 10px;
+    }
+
+    .attend-form {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .attend-form h2 {
+        font-size: 1.2rem;
+    }
+}

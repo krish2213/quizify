@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="/public/logo.png" width="250" height="250">
+  <img src="client/public/logo.png" width="250" height="250">
 </div>
 
 Take Daily Challenges such as Quiz, Sudoku and AI-powered or user-created quizzes, climb the leaderboards, and enjoy fair play. Create, share, and challenge friends while following others to discover exciting new quizzes! 🎯🏆
@@ -25,15 +25,15 @@ Take Daily Challenges such as Quiz, Sudoku and AI-powered or user-created quizze
 - [https://quizify.azurewebsites.net/](https://quizify.azurewebsites.net/)
 
 ## 🛠 Technologies Used
-- 🎨 **Frontend:** HTML, CSS, JavaScript
-- ⚙️ **Backend:** Node.js (Express)
-- 🗄 **Database:** MongoDB
-- 🔑 **Authentication:** JWT / OAuth
+- 🎨 **Frontend:** React.js, Vite, Vanilla CSS, Chart.js
+- ⚙️ **Backend:** Node.js, Express.js
+- 🗄 **Database:** MongoDB (Mongoose)
+- 🔑 **Authentication:** Google OAuth 2.0, Local Auth, JWT
 - 📧 **Email Service:** Nodemailer
 - ⏳ **Scheduling:** Nodecron
 - ☁️ **Image Storage:** Cloudinary
-- 🧠 **AI Integration:** GroqCloud API & Gemini API
-- 🚀 **Deployment:** Microsoft Azure
+- 🧠 **AI Integration:** GroqCloud API
+- 🚀 **Deployment:** Azure App Service
 
 ## 🤝 Contributing
 Contributions are welcome! 
