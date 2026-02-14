@@ -9,7 +9,7 @@ router.get("/", isLoggedIn, async (req, res) => {
         return res.json({ redirect: "/attendquiz" });
     }
     try {
-        const quiz = await UserQuiz.findOne({ number: req.session.code });
+        const quiz = await UserQuiz.findOne({ number: req.session.code }, {"questions.correctoption" : 0 });
         if (!quiz) {
             return res.status(404).json({ error: "Quiz not found" });
         }
