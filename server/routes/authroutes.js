@@ -438,22 +438,14 @@ router.get("/challenge", isLoggedIn, async (req, res) => {
 router.post("/challenge", isLoggedIn, async (req, res) => {
     const { username, topic } = req.body;
     try {
-        console.log(`[POST /challenge] Request received: User=${req.user.username}, Opponent=${username}, Topic=${topic}`);
         const user = await User.findOne({ username });
         if (!user) {
-            console.log("[POST /challenge] Opponent not found");
             return res.json({ success: false, message: "User not found" });
         }
-
-        console.log("[POST /challenge] Generating quiz...");
         const question = await generateQuiz(topic, 5);
-        console.log("[POST /challenge] Quiz generation result:", question ? "Success" : "Failure");
-
         if (!question || question === "error") return res.json({ success: false, message: "Generation failed" });
-
         const challenge = new Challenge({ author: req.user._id, from: req.user._id, to: user._id, questions: question, topic });
         await challenge.save();
-        console.log("[POST /challenge] Challenge saved successfully");
         return res.json({ success: true, message: "Challenge Created" });
     } catch (e) {
         console.error("[POST /challenge] EXCEPTION:", e);
@@ -487,16 +479,15 @@ router.post("/create-challenge", isLoggedIn, async (req, res) => {
 })
 
 router.get("/challenges", isLoggedIn, async (req, res) => {
-    const challenges1 = await Challenge.find({ $or: [{ from: req.user._id }, { to: req.user._id }], userAttempts: { $not: { $elemMatch: { user: req.user._id } } } }).populate('from to', 'username profilePicture xp').sort({ _id: 1 });
-    const challenges2 = await Challenge.find({ $and: [{ $or: [{ from: req.user._id }, { to: req.user._id }] }, { "userAttempts.user": req.user._id }] }).populate('from to', 'username profilePicture xp').populate('userAttempts.user', 'username').sort({ _id: -1 });
+    const challenges1 = await Challenge.find({ $or: [{ from: req.user._id }, { to: req.user._id }], userAttempts: { $not: { $elemMatch: { user: req.user._id } } } }, {"questions.correctoption" : 0 } ).populate('from to', 'username profilePicture xp').sort({ _id: 1 });
+    const challenges2 = await Challenge.find({ $and: [{ $or: [{ from: req.user._id }, { to: req.user._id }] }, { "userAttempts.user": req.user._id }] }, {"questions.correctoption" : 0 } ).populate('from to', 'username profilePicture xp').populate('userAttempts.user', 'username').sort({ _id: -1 });
     return res.json({ challenges1, challenges2, user: req.user._id, userr: req.user.username });
 })
 
 router.get("/playchallenge/:id", isLoggedIn, async (req, res) => {
-    console.log("DEBUG: PlayChallenge route hit for ID:", req.params.id);
     const { id } = req.params;
     try {
-        const data = await Challenge.findOne({ _id: id });
+        const data = await Challenge.findOne({ _id: id }, {"questions.correctoption" : 0 });
         const attempt = data.userAttempts.find(a => a.user.toString() === req.user._id.toString());
         if (attempt) {
             return res.json({ redirect: "/challenges" });
@@ -643,9 +634,6 @@ router.post("/sudoku", isLoggedIn, async (req, res) => {
 })
 
 router.get("/dailychallenge", isLoggedIn, async (req, res) => {
-    // This seems redundant if /api/show handles daily quiz.
-    // The previous EJS just rendered a wrapper.
-    // We can redirect or return info.
     res.json({ redirect: "/dailychallenge" });
 })
 
@@ -672,16 +660,5 @@ router.get("/checkemail", async (req, res) => {
     }
     return res.json({ exists: false, message: "Email available" });
 })
-
-router.get("/challenges", isLoggedIn, async (req, res) => {
-    try {
-        const challenges1 = await Challenge.find({ accepted: false, createdBy: { $ne: req.user.username }, "to.username": { $ne: req.user.username } }).populate("from", "username profilePicture xp").populate("to", "username profilePicture xp");
-        const challenges2 = await Challenge.find({ $or: [{ "from": req.user._id }, { "to": req.user._id }], accepted: true }).populate("from", "username profilePicture xp").populate("to", "username profilePicture xp").populate("userAttempts.user");
-        res.json({ challenges1, challenges2 });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: "Failed to fetch challenges" });
-    }
-});
 
 module.exports = router;

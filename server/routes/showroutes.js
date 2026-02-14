@@ -12,7 +12,7 @@ router.get("/", isLoggedIn, async (req, res) => {
         month: "2-digit",
         day: "2-digit",
     }).split("/").reverse().join("-");
-    const data = await Quiz.findOne({ date: ind });
+    const data = await Quiz.findOne({ date: ind }, {"questions.correctoption" : 0 });
     const attemptexist = user.quizAttempts.find(attempt => attempt.date === ind);
     const logattempt = user.logoutAttempts.find(a => a.date === ind);
     if (attemptexist) {

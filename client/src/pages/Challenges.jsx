@@ -126,7 +126,7 @@ export default function Challenges() {
                                                 </Link>
                                             </div>
                                             <div className="username" style={{ fontSize: '18px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '90px' }}>
-                                                <Link to={`/profile/${c.from.username}`} style={{ color: c.from.username === currentUser.username ? '#7B16FF' : 'white', textDecoration: 'none' }}>
+                                                <Link to={`/profile/${c.from.username}`} style={{ color: '#7B16FF', textDecoration: 'none' }}>
                                                     {c.from.username === currentUser.username ? 'You' : c.from.username}
                                                 </Link>
                                             </div>
@@ -142,7 +142,7 @@ export default function Challenges() {
                                                 </Link>
                                             </div>
                                             <div className="username" style={{ fontSize: '18px', fontWeight: 'bold', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '90px' }}>
-                                                <Link to={`/profile/${c.to.username}`} style={{ color: c.to.username === currentUser.username ? '#7B16FF' : 'white', textDecoration: 'none' }}>
+                                                <Link to={`/profile/${c.to.username}`} style={{ color: '#7B16FF', textDecoration: 'none' }}>
                                                     {c.to.username === currentUser.username ? 'You' : c.to.username}
                                                 </Link>
                                             </div>
