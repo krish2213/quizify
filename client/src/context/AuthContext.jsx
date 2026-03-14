@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { subscribeUserToPush } from '../utils/pushNotifications';
 
 const AuthContext = createContext(null);
 
@@ -12,6 +13,20 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         checkUser();
     }, []);
+
+    useEffect(() => {
+        if (user && !loading) {
+            subscribeUserToPush().then(res => {
+                if (res.success) {
+                    console.log("Auto-subscription success during login", res.message);
+                } else {
+                    console.warn("Auto-subscription declined during login", res.message);
+                }
+            }).catch(err => {
+                console.error("Auto-subscription error during login", err);
+            });
+        }
+    }, [user, loading]);
 
     const checkUser = async () => {
         try {
@@ -37,6 +52,7 @@ export const AuthProvider = ({ children }) => {
             console.error("Logout API failed:", error);
         } finally {
             localStorage.removeItem('pwaPromptShown');
+            localStorage.removeItem('notificationPromptShown');
             setUser(null);
             localStorage.setItem('logoutToast', 'true');
             navigate('/login');

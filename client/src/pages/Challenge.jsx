@@ -45,10 +45,10 @@ export default function Challenge() {
         setLoading(true);
         try {
             const res = await api.post('/api/challenge', { username: search, topic: topic }, { timeout: 60000 });
-            console.log("Full Axios Response:", res);
             if (res.data && res.data.success) {
                 navigate('/challenges');
                 toast.success("Challenge Created!");
+                await api.post('/api/notifications/challenge', { username: search, url: "/challenges" });
             } else {
                 console.error("Failure response data:", res.data);
                 toast.error("Creation Failed: " + (res.data.error || "Unknown Error"));

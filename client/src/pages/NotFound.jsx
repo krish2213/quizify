@@ -1,44 +1,32 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import './NotFound.css';
 
 export default function NotFound() {
     useEffect(() => {
-        document.title = "404 - Page Not Found";
+        document.title = "Page Not Found - Quizify";
     }, []);
 
     return (
-        <div style={{
-            backgroundImage: 'url(/404.jpeg)',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center center',
-            backgroundAttachment: 'fixed',
-            minHeight: '100vh',
-            width: '100vw',
-            margin: 0,
-            fontFamily: 'Arial, sans-serif'
-        }}>
-            <div style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '60vh',
-                textAlign: 'center',
-                flexDirection: 'column'
-            }}>
+        <div className="not-found-container">
+            <div style={{ position: 'absolute', top: '20px', left: '20px' }}>
                 <Link
                     to="/"
                     style={{
-                        fontSize: '1.5rem',
+                        display: 'inline-block',
+                        fontSize: '1.2rem',
                         textDecoration: 'none',
                         fontWeight: 'bold',
-                        color: '#7B16FF',
+                        color: 'rgba(255, 255, 255, 0.8)',
+                        backgroundColor: '#7B16FF',
+                        padding: '10px 15px',
+                        borderRadius: '8px',
                         transition: 'color 0.3s ease'
                     }}
                     onMouseOver={(e) => e.currentTarget.style.color = '#e74c3c'}
                     onMouseOut={(e) => e.currentTarget.style.color = '#7B16FF'}
                 >
-                    <i className="fa-solid fa-house"></i> Go back to the homepage
+                    <i className="fa-solid fa-arrow-left"></i> Go back
                 </Link>
             </div>
         </div>

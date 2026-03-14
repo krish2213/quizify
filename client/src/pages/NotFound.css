@@ -1,0 +1,18 @@
+.not-found-container {
+    background-image: url('/404.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: scroll;
+    min-height: 100vh;
+    width: 100vw;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+@media (max-width: 768px) {
+    .not-found-container {
+        background-image: url('/404_mobile.png');
+        background-attachment: scroll;
+    }
+}
