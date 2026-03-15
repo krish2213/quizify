@@ -13,11 +13,15 @@ export default function Challenge() {
     const [suggestions, setSuggestions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [count, setCount] = useState(0);
+    const [user, setUser] = useState('');
 
     useEffect(() => {
         document.title = "1v1 Quiz";
         api.get('/api/challenge').then(res => {
             setCount(res.data.count);
+        });
+        api.get('/api/current_user').then(res => {
+            setUser(res.data.user);
         });
     }, []);
 
@@ -48,7 +52,7 @@ export default function Challenge() {
             if (res.data && res.data.success) {
                 navigate('/challenges');
                 toast.success("Challenge Created!");
-                await api.post('/api/notifications/challenge', { username: search, url: "/challenges" });
+                await api.post('/api/notifications/challenge', { sender: user.username, receiver: search, url: "/challenges" });
             } else {
                 console.error("Failure response data:", res.data);
                 toast.error("Creation Failed: " + (res.data.error || "Unknown Error"));

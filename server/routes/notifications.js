@@ -29,27 +29,35 @@ router.post("/subscribe", isLoggedIn, async (req, res) => {
 });
 
 router.post("/challenge", isLoggedIn, async (req, res) => {
-  const { username, url } = req.body;
-  if (!username) {
-    return res.status(400).json({ success: false, message: "Username is required" });
+  const { sender, receiver, url } = req.body;
+  if (!sender || !receiver) {
+    return res.status(400).json({ success: false, message: "Sender and receiver are required" });
   }
   try {
-    const payload = JSON.stringify({ title: `${username} has challenged you!`, body: "Accept the challenge to play 1v1", url: url || "/" });
-    const user = await User.findOne({ username: username });
+    const payload = JSON.stringify({ title: `${sender} has challenged you!`, body: "Accept the challenge to play 1v1", url: url || "/" });
+    const user = await User.findOne({ username: receiver });
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
+    let madeChanges = false;
+    const validSubs = [];
     for (const subscription of user.pushSubscriptions) {
       try {
-        await webPush.sendNotification(subscription, payload);
+        await webPush.sendNotification(subscription, payload, { urgency: 'high', TTL: 86400, topic: 'challenge' });
+        validSubs.push(subscription);
       }
       catch (err) {
         if (err.statusCode === 410 || err.statusCode === 404) {
-          user.pushSubscriptions = user.pushSubscriptions.filter((sub) => JSON.stringify(sub) !== JSON.stringify(subscription));
-          user.isNotificationEnabled = user.pushSubscriptions.length > 0;
-          await user.save();
+          madeChanges = true;
+        } else {
+          validSubs.push(subscription);
         }
       }
+    }
+    if (madeChanges) {
+      user.pushSubscriptions = validSubs;
+      user.isNotificationEnabled = validSubs.length > 0;
+      await user.save();
     }
     return res.status(200).json({ success: true, message: "Notification sent successfully" });
   }
@@ -76,17 +84,25 @@ router.post("/user", async (req, res) => {
     if (!user.pushSubscriptions.length) {
       return res.status(400).json({ success: false, message: "User doesn't have notification enabled" });
     }
+    let madeChanges = false;
+    const validSubs = [];
     for (const subscription of user.pushSubscriptions) {
       try {
-        await webPush.sendNotification(subscription, payload);
+        await webPush.sendNotification(subscription, payload, { urgency: 'high', TTL: 86400, topic: 'direct_notify' });
+        validSubs.push(subscription);
       }
       catch (err) {
         if (err.statusCode === 410 || err.statusCode === 404) {
-          user.pushSubscriptions = user.pushSubscriptions.filter((sub) => JSON.stringify(sub) !== JSON.stringify(subscription));
-          user.isNotificationEnabled = user.pushSubscriptions.length > 0;
-          await user.save();
+          madeChanges = true;
+        } else {
+          validSubs.push(subscription);
         }
       }
+    }
+    if (madeChanges) {
+      user.pushSubscriptions = validSubs;
+      user.isNotificationEnabled = validSubs.length > 0;
+      await user.save();
     }
     return res.status(200).json({ success: true, message: `Notification sent successfully to ${username}` });
   }
@@ -113,13 +129,15 @@ router.post("/all", async (req, res) => {
       const validSubs = [];
       for (const subscription of user.pushSubscriptions) {
         try {
-          await webPush.sendNotification(subscription, payload);
+          await webPush.sendNotification(subscription, payload, { urgency: 'high', TTL: 86400, topic: 'broadcast' });
           totalSent++;
           validSubs.push(subscription);
         }
         catch (err) {
           if (err.statusCode === 410 || err.statusCode === 404) {
             madeChanges = true;
+          } else {
+            validSubs.push(subscription);
           }
         }
       }
