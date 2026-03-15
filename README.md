@@ -5,11 +5,11 @@
 Take Daily Challenges such as Quiz, Sudoku and AI-powered or user-created quizzes, climb the leaderboards, and enjoy fair play. Create, share, and challenge friends while following others to discover exciting new quizzes! 🎯🏆
 
 ## ✨ Features
-- 📲 **Progressive Web App (PWA):** Users can install the app to their device with a custom install prompt for a native app-like experience.
+- 📲 **Progressive Web App (PWA):** Users can install the app on their device with a custom install prompt for a native app-like experience and receive push notifications for updates and activities.
 - 🔐 **User Authentication:** Users register via email, and accounts are created after verification.
 - 📩 **Welcome Mail:** A welcome email is sent upon successful registration.
 - 🔢 **Daily Sudoku Challenge:** Fresh puzzle every day with tracked scores, integrated into the leaderboard for extra fun and competition.
-- ⚔️ **1v1 Challenge Mode:** Challenge any user to a 1v1 quiz battle on a selected topic. Win/loss/draw stats are visually displayed via a doughnut chart. Earn XP for completing quizzes, winning challenges.
+- ⚔️ **1v1 Challenge Mode:** Challenge any user to a 1v1 quiz battle on a selected topic. Win/loss/draw stats are visually displayed via a doughnut chart. Earn XP for completing quizzes, winning challenges. User will get notified if someone challenges them.
 - 🧠 **AI-Generated & User-Created Quizzes:** Users can take AI-generated quizzes or quizzes created by others using shared quiz codes.
 - ❌ **Quiz Attempt Rules:** Users cannot retake the Daily Quiz on the same day; only one attempt is allowed.
 - 🔄 **Strict Session Management Policy:**
@@ -33,7 +33,7 @@ Take Daily Challenges such as Quiz, Sudoku and AI-powered or user-created quizze
 - ⏳ **Scheduling:** Nodecron
 - ☁️ **Image Storage:** Cloudinary
 - 🧠 **AI Integration:** GroqCloud API
-- 🚀 **Deployment:** Azure App Service
+- 🚀 **Deployment:** Microsoft Azure
 
 ## 🤝 Contributing
 Contributions are welcome! 

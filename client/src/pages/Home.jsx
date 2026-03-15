@@ -9,6 +9,7 @@ export default function Home() {
     const { user, logout } = useAuth();
     const [count, setCount] = useState(0);
     const [searchParams, setSearchParams] = useSearchParams();
+    const [showPushBanner, setShowPushBanner] = useState(false);
 
     useEffect(() => {
         document.title = "Quizify";
@@ -92,14 +93,36 @@ export default function Home() {
             }
         };
         fetchHomeStats();
+
+        const checkPushStatus = () => {
+            if (!user) return;
+            const isSupported = 'serviceWorker' in navigator && 'PushManager' in window;
+            const permission = Notification.permission;
+            if (isSupported && permission !== 'granted' && !localStorage.getItem('notificationPromptShown')) {
+                setShowPushBanner(true);
+            }
+        };
+        checkPushStatus();
+
         return () => {
             window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
         };
-    }, []);
+    }, [user]);
 
     if (!user) return null;
     return (
         <>
+            {showPushBanner && (
+                <div className="notification-banner">
+                    <div className="banner-content">
+                        <i className="fa-solid fa-bell-circle-exclamation"></i>
+                        <span>Kindly enable notifications in site settings to get alerts instantly!</span>
+                    </div>
+                    <div className="banner-actions">
+                        <button onClick={() => { setShowPushBanner(false); localStorage.setItem('notificationPromptShown', 'true'); }} className="banner-btn-enable">Close</button>
+                    </div>
+                </div>
+            )}
             <div style={{ textAlign: 'center', marginTop: '20px' }}>
                 <img src="/logo.png" width="250" height="250" alt="Logo" />
                 <h2>WELCOME TO QUIZIFY, SOLVE & EXPLORE NEW CHALLENGES EVERYDAY</h2>

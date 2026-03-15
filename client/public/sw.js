@@ -29,7 +29,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    if (!event.request.url.startsWith('http')) return;
+    if (!event.request.url.startsWith('http') || event.request.method !== 'GET') return;
     event.respondWith(
         fetch(event.request)
             .then(response => {
@@ -46,5 +46,44 @@ self.addEventListener('fetch', event => {
             .catch(() => {
                 return caches.match(event.request);
             })
+    );
+});
+
+self.addEventListener('push', event => {
+    let data = { title: 'New Notification', body: 'You have a message!' };
+    if (event.data) {
+        try {
+            data = event.data.json();
+        } catch (err) {
+            data.body = event.data.text();
+            data.url = '/';
+        }
+    }
+    const options = {
+        body: data.body,
+        icon: '/logo.png',
+        badge: '/icons/icon192.png',
+        data: data.url || '/'
+    };
+    event.waitUntil(
+        self.registration.showNotification(data.title, options)
+    );
+});
+
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    const targetUrl = event.notification.data || '/';
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+            for (let i = 0; i < windowClients.length; i++) {
+                const client = windowClients[i];
+                if (client.url.includes(targetUrl) && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+            if (clients.openWindow) {
+                return clients.openWindow(targetUrl);
+            }
+        })
     );
 });

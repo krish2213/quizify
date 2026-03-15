@@ -28,6 +28,7 @@ const attendingroutes = require("./routes/attending");
 const usergeneratedroutes = require("./routes/usergenerate");
 const followroutes = require("./routes/follow");
 const profileroutes = require("./routes/profile");
+const notificationroutes = require("./routes/notifications");
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -186,6 +187,7 @@ app.use("/api/generate-quiz", generatequizroutes)
 app.use("/api/attending", attendingroutes);
 app.use("/api/generatequiz", usergeneratedroutes);
 app.use("/api/follow", followroutes);
+app.use("/api/notifications", notificationroutes);
 app.use("/api", authroutes);
 
 
